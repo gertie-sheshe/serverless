@@ -80,6 +80,28 @@
   </template>
 
   <script>
+
+    const addScores = (element, scores) => {
+      scores.forEach((score) => {
+        const item = document.createElement('li');
+        const label = document.createElement('span');
+        label.classList.add('source');
+
+
+        // shorten the long name to make the layout look nice.
+        label.innerText = score.Source === 'Internet Movie Database' ? 'IMDb' : score.Source;
+        item.appendChild(label);
+
+        const value = document.createElement('span');
+        value.innerText = score.Value;
+        item.appendChild(value)
+
+
+        const scoreElement = element.querySelector('.scores');
+        scoreElement.appendChild(value);
+      })
+    }
+
     async function initialize() {
       const response = await fetch('/.netlify/functions/movies');
       const movies = await response.json();
@@ -99,6 +121,8 @@
         // Title + Tagline
         element.querySelector('h2').innerText = movie.title;
         element.querySelector('.tagline').innerText = movie.tagline;
+
+        addScores(element, movie.scores)
 
         // append to DOM
         container.appendChild(element);

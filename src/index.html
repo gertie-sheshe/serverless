@@ -14,7 +14,9 @@
 
   .movie img {
     display: block;
-    width: 100%;
+    width: 300px;
+    height: 500px;
+    object-fit: contain
   }
 
   .movie h2 {
@@ -54,4 +56,57 @@
   }
 </style>
 
-<h1>Movies, Floofed</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Movies, Floofed</h1>
+  <div class="movies"></div>
+  <template id="movie-template">
+    <div class="movie">
+      <img src="" alt="" />
+
+      <h2></h2>
+      <p class="tagline"></p>
+
+      <h3>Viewer Ratings</h3>
+      <ul class="scores"></ul>
+    </div>
+  </template>
+
+  <script>
+    async function initialize() {
+      const response = await fetch('/.netlify/functions/movies');
+      const movies = await response.json();
+
+
+      const container = document.querySelector('.movies');
+      const template = document.querySelector('#movie-template');
+
+      movies?.forEach((movie) => {
+        const element = template.content.cloneNode(true)
+
+        // Image
+        const img = element.querySelector('img');
+        img.src = movie.poster;
+        img.alt = movie.title;
+
+        // Title + Tagline
+        element.querySelector('h2').innerText = movie.title;
+        element.querySelector('.tagline').innerText = movie.tagline;
+
+        // append to DOM
+        container.appendChild(element);
+      })
+
+      
+    }
+    initialize()
+  </script>
+</body>
+</html>
